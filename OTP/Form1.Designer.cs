@@ -37,7 +37,6 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // listBox1
@@ -75,7 +74,7 @@
             this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(647, 294);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(85, 81);
+            this.button2.Size = new System.Drawing.Size(85, 111);
             this.button2.TabIndex = 3;
             this.button2.Text = "Copy";
             this.button2.UseVisualStyleBackColor = true;
@@ -134,6 +133,7 @@
             this.button3.TabIndex = 7;
             this.button3.Text = "Manage";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
@@ -153,21 +153,11 @@
             this.button5.Text = "About";
             this.button5.UseVisualStyleBackColor = true;
             // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(647, 381);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(85, 23);
-            this.button6.TabIndex = 10;
-            this.button6.Text = "QR Code";
-            this.button6.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(775, 440);
-            this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -195,7 +185,6 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
     }
 }
 

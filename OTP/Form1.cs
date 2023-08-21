@@ -70,5 +70,17 @@ namespace OTP
         {
             Clipboard.SetText(label1.Text);
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            // 创建 Form2 实例
+            Form2 form2 = new Form2();
+
+            // 显示新创建的 Form2 实例
+            form2.Show();
+
+            // 隐藏当前的 Form1 实例
+            this.Hide();
+        }
     }
 }
