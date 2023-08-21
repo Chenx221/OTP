@@ -32,10 +32,8 @@ namespace OTP
         private void Timer_Tick(object sender, EventArgs e)
         {
             int remainingSeconds = totp.RemainingSeconds();
-            int totalSeconds = 30;
-
-            progressBar1.Value = (totalSeconds - remainingSeconds) * progressBar1.Maximum / totalSeconds;
-            label2.Text = remainingSeconds.ToString();
+            circularProgressBar1.Text = remainingSeconds.ToString();
+            circularProgressBar1.Value = remainingSeconds;
             if (remainingSeconds == 30)
             {
                 GenerateAndDisplayTotp();
