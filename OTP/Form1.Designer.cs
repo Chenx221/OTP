@@ -36,6 +36,8 @@
             this.circularProgressBar1 = new CircularProgressBar.CircularProgressBar();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // listBox1
@@ -43,7 +45,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(42, 38);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(473, 316);
+            this.listBox1.Size = new System.Drawing.Size(473, 368);
             this.listBox1.TabIndex = 0;
             // 
             // label1
@@ -60,9 +62,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(556, 302);
+            this.button1.Location = new System.Drawing.Point(556, 294);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(85, 51);
+            this.button1.Size = new System.Drawing.Size(85, 23);
             this.button1.TabIndex = 3;
             this.button1.Text = "Generate";
             this.button1.UseVisualStyleBackColor = true;
@@ -70,12 +72,14 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(647, 302);
+            this.button2.Enabled = false;
+            this.button2.Location = new System.Drawing.Point(647, 294);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(85, 51);
+            this.button2.Size = new System.Drawing.Size(85, 81);
             this.button2.TabIndex = 3;
             this.button2.Text = "Copy";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // label2
             // 
@@ -124,27 +128,47 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(556, 359);
+            this.button3.Location = new System.Drawing.Point(556, 323);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(85, 23);
             this.button3.TabIndex = 7;
-            this.button3.Text = "Settings";
+            this.button3.Text = "Manage";
             this.button3.UseVisualStyleBackColor = true;
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(647, 359);
+            this.button4.Location = new System.Drawing.Point(556, 352);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(85, 23);
             this.button4.TabIndex = 8;
-            this.button4.Text = "About";
+            this.button4.Text = "Refresh";
             this.button4.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(556, 382);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(85, 23);
+            this.button5.TabIndex = 9;
+            this.button5.Text = "About";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(647, 381);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(85, 23);
+            this.button6.TabIndex = 10;
+            this.button6.Text = "QR Code";
+            this.button6.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(775, 400);
+            this.ClientSize = new System.Drawing.Size(775, 440);
+            this.Controls.Add(this.button6);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.label2);
@@ -170,6 +194,8 @@
         private CircularProgressBar.CircularProgressBar circularProgressBar1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
     }
 }
 

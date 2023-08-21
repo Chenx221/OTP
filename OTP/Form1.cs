@@ -53,7 +53,8 @@ namespace OTP
 
         private void button1_Click(object sender, EventArgs e)
         {
-            button1.Enabled = false; // 禁用按钮
+            button1.Enabled = false; // 禁用生成按钮
+            button2.Enabled = true; // 启用复制按钮
             GenerateAndDisplayTotp(); // 生成并显示 TOTP 密码
 
             // 开始计时器
@@ -65,5 +66,9 @@ namespace OTP
             button1.Enabled = true; // 在窗体加载时启用按钮
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(label1.Text);
+        }
     }
 }
