@@ -9,9 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 using ZXing;
 using AForge.Video;
 using AForge.Video.DirectShow;
+using System.Drawing.Imaging;
 
 namespace OTP
 {
@@ -24,6 +26,7 @@ namespace OTP
         private VideoCaptureDevice camera; // 声明用于摄像头捕获的变量
         private bool isCameraRunning = false; // 用于标识摄像头的运行状态
         private bool isScanningPaused = false;
+        private Bitmap previousBitmap = null;
 
         public Form3()
         {
@@ -35,7 +38,10 @@ namespace OTP
         private void Form3_FormClosing(object sender, FormClosingEventArgs e)
         {
             StopCapturing(); // 关闭窗口时停止截图
-            StopCamera(); // 关闭窗口时停止摄像头
+            if (isCameraRunning)
+            {
+                StopCamera(); // 关闭窗口时停止摄像头
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -132,7 +138,6 @@ namespace OTP
             ScreenCapturer.StopCapture(); // 停止截图
         }
 
-
         private void ScanQRCode(Bitmap bitmap)
         {
             // 创建二维码读取器实例
@@ -149,7 +154,7 @@ namespace OTP
                 // 判断是否符合期望的格式
                 if (decodedText.StartsWith("otpauth://totp/") && decodedText.Contains("?secret="))
                 {
-                    if (!isLocalfile)
+                    if (!isLocalfile && !isScanningPaused)
                     {
                         StopCapturing();
                         this.Invoke((MethodInvoker)(() => label5.Text = "Stopped"));
@@ -168,6 +173,7 @@ namespace OTP
                         this.Invoke((MethodInvoker)(() => textBox1.Text = title));
                         this.Invoke((MethodInvoker)(() => textBox2.Text = secretKey));
                         this.Invoke((MethodInvoker)(() => label4.Text = "Success"));
+                        //StopCamera();
                     }
                     else
                     {
@@ -185,6 +191,10 @@ namespace OTP
                 {
                     label3.Text = "None";
                     label4.Text = "QR code not detected.";
+                }else if (isScanningPaused)
+                {
+                    this.Invoke((MethodInvoker)(() => label3.Text = "None"));
+                    this.Invoke((MethodInvoker)(() => label4.Text = "QR code not detected."));
                 }
             }
         }
@@ -210,28 +220,35 @@ namespace OTP
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (!isCameraRunning)
+            isScanningPaused = false;
+            button7.Text = "Pause";
+            if (isCameraRunning)
+            {
+                StopCamera(); // 停止摄像头
+            }else
             {
                 StartCamera(); // 启动摄像头
             }
-            else
-            {
-                StopCamera(); // 停止摄像头
-            }
         }
+
         private void StartCamera()
         {
-            if (videoDevices != null && videoDevices.Count > 0)
+            if (!isCameraRunning) // 添加条件检查摄像头是否已经在运行
             {
-                camera = new VideoCaptureDevice(videoDevices[0].MonikerString);
-                camera.NewFrame += Camera_NewFrame; // 注册摄像头捕获图像的事件
-                camera.Start(); // 启动摄像头
-                isCameraRunning = true; // 设置摄像头运行状态为 true
-                //button5.Text = "Stop Camera"; // 更新按钮文本
-            }
-            else
-            {
-                MessageBox.Show("No camera device found.");
+                if (videoDevices != null && videoDevices.Count > 0)
+                {
+                    if (camera == null)
+                    {
+                        camera = new VideoCaptureDevice(videoDevices[0].MonikerString);
+                    }
+                    camera.NewFrame += Camera_NewFrame; // 注册摄像头捕获图像的事件
+                    camera.Start(); // 启动摄像头
+                    isCameraRunning = true; // 设置摄像头运行状态为 true
+                }
+                else
+                {
+                    MessageBox.Show("No camera device found.");
+                }
             }
         }
 
@@ -242,22 +259,29 @@ namespace OTP
                 camera.SignalToStop();
                 camera.WaitForStop();
                 camera.NewFrame -= Camera_NewFrame; // 取消注册摄像头捕获图像的事件
+                camera = null; // 将摄像头对象置为null，以便下次重新创建
                 isCameraRunning = false; // 设置摄像头运行状态为 false
-                //button5.Text = "Start Camera"; // 更新按钮文本
+                isScanningPaused = false;
+                button7.Text = "Pause";
             }
         }
 
         private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            // 进行二维码扫描
             Bitmap bitmap = (Bitmap)eventArgs.Frame.Clone();
             if (!isScanningPaused)
             {
+                if (previousBitmap != null)
+                {
+                    previousBitmap.Dispose();
+                }
                 pictureBox1.Image = bitmap;
-            }else
+                previousBitmap = bitmap;
+            }
+            else
             {
-                // 进行二维码扫描
                 ScanQRCode(bitmap);
+                bitmap.Dispose();
             }
         }
 
@@ -265,6 +289,33 @@ namespace OTP
         {
             isScanningPaused = !isScanningPaused;
             button7.Text = isScanningPaused ? "Resume" : "Pause";
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            string clipboardText = Clipboard.GetText();
+
+            if (!string.IsNullOrWhiteSpace(clipboardText) &&
+                clipboardText.StartsWith("otpauth://totp/") &&
+                clipboardText.Contains("?secret="))
+            {
+                string[] parts = clipboardText.Split(new char[] { '/', '=', '&', '?' });
+                if (parts.Length >= 6)
+                {
+                    string title = parts[3]; // 获取 title 部分
+                    string secretKey = parts[5]; // 获取 secretKey 部分
+
+                    MessageBox.Show("OTP link successfully pasted.");
+
+                    // 填充文本框
+                    textBox1.Text = title;
+                    textBox2.Text = secretKey;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Clipboard content is not a valid OTP link.");
+            }
         }
     }
 }

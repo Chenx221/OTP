@@ -42,8 +42,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button7 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -138,6 +139,7 @@
             this.button6.TabIndex = 9;
             this.button6.Text = "Import from Clipboard";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // label3
             // 
@@ -168,6 +170,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.button7);
             this.groupBox1.Controls.Add(this.pictureBox1);
             this.groupBox1.Controls.Add(this.label4);
@@ -180,6 +183,22 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Debug Info";
             // 
+            // button7
+            // 
+            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button7.Location = new System.Drawing.Point(366, 162);
+            this.button7.MinimumSize = new System.Drawing.Size(75, 75);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 75);
+            this.button7.TabIndex = 15;
+            this.button7.Text = "Pause";
+            this.button7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
             // pictureBox1
             // 
             this.pictureBox1.Location = new System.Drawing.Point(105, 113);
@@ -189,21 +208,14 @@
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
             // 
-            // button7
+            // label6
             // 
-            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.button7.Font = new System.Drawing.Font("Microsoft Sans Serif", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button7.Location = new System.Drawing.Point(366, 162);
-            this.button7.MinimumSize = new System.Drawing.Size(75, 75);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(75, 75);
-            this.button7.TabIndex = 15;
-            this.button7.Text = "●";
-            this.button7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(8, 146);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(91, 91);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "Note:\r\n使用相机扫码会\r\n自动填充内容到\r\n输入框\r\n因为坑比较多不\r\n好填，所以这个\r\n功能不是很完善";
             // 
             // Form3
             // 
@@ -256,5 +268,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Label label6;
     }
 }
