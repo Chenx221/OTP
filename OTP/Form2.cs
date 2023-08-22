@@ -60,5 +60,16 @@ namespace OTP
                 }
             }
         }
+
+        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Form1 form1 = Application.OpenForms["Form1"] as Form1;
+            if (form1 != null)
+            {
+                form1.Show();
+            }
+        }
+
+
     }
 }

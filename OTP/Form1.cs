@@ -82,5 +82,18 @@ namespace OTP
             // 隐藏当前的 Form1 实例
             this.Hide();
         }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Do you want to exit the application?", "Confirm Exit",
+                                                  MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.No)
+            {
+                e.Cancel = true; // 取消关闭事件，阻止关闭
+            }
+            // 如果用户选择 Yes，什么都不需要做，窗体会继续关闭
+        }
+
     }
 }

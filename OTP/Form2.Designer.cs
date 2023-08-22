@@ -112,6 +112,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "Form2";
             this.Text = "Data Manage";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form2_FormClosing);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);

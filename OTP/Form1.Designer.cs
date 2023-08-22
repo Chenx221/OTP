@@ -124,6 +124,7 @@
             this.circularProgressBar1.TabIndex = 6;
             this.circularProgressBar1.Text = "time";
             this.circularProgressBar1.TextMargin = new System.Windows.Forms.Padding(21, 2, 0, 0);
+            this.circularProgressBar1.Value = 30;
             // 
             // button3
             // 
@@ -169,6 +170,7 @@
             this.Controls.Add(this.circularProgressBar1);
             this.Name = "Form1";
             this.Text = "Main Window";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
