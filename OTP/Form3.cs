@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZXing;
+using AForge.Video;
+using AForge.Video.DirectShow;
 
 namespace OTP
 {
@@ -18,15 +20,22 @@ namespace OTP
         private string connectionString = "Data Source=key.db;Version=3;";
         private bool isCapturing = false; // 添加标识截图状态的成员变量
         private bool isLocalfile = false;
+        private FilterInfoCollection videoDevices; // 声明用于存储摄像头设备信息的变量
+        private VideoCaptureDevice camera; // 声明用于摄像头捕获的变量
+        private bool isCameraRunning = false; // 用于标识摄像头的运行状态
+        private bool isScanningPaused = false;
 
         public Form3()
         {
             InitializeComponent();
+            videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+
         }
 
         private void Form3_FormClosing(object sender, FormClosingEventArgs e)
         {
             StopCapturing(); // 关闭窗口时停止截图
+            StopCamera(); // 关闭窗口时停止摄像头
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -197,6 +206,65 @@ namespace OTP
                     
                 }
             }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (!isCameraRunning)
+            {
+                StartCamera(); // 启动摄像头
+            }
+            else
+            {
+                StopCamera(); // 停止摄像头
+            }
+        }
+        private void StartCamera()
+        {
+            if (videoDevices != null && videoDevices.Count > 0)
+            {
+                camera = new VideoCaptureDevice(videoDevices[0].MonikerString);
+                camera.NewFrame += Camera_NewFrame; // 注册摄像头捕获图像的事件
+                camera.Start(); // 启动摄像头
+                isCameraRunning = true; // 设置摄像头运行状态为 true
+                //button5.Text = "Stop Camera"; // 更新按钮文本
+            }
+            else
+            {
+                MessageBox.Show("No camera device found.");
+            }
+        }
+
+        private void StopCamera()
+        {
+            if (camera != null && camera.IsRunning)
+            {
+                camera.SignalToStop();
+                camera.WaitForStop();
+                camera.NewFrame -= Camera_NewFrame; // 取消注册摄像头捕获图像的事件
+                isCameraRunning = false; // 设置摄像头运行状态为 false
+                //button5.Text = "Start Camera"; // 更新按钮文本
+            }
+        }
+
+        private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
+        {
+            // 进行二维码扫描
+            Bitmap bitmap = (Bitmap)eventArgs.Frame.Clone();
+            if (!isScanningPaused)
+            {
+                pictureBox1.Image = bitmap;
+            }else
+            {
+                // 进行二维码扫描
+                ScanQRCode(bitmap);
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            isScanningPaused = !isScanningPaused;
+            button7.Text = isScanningPaused ? "Resume" : "Pause";
         }
     }
 }
