@@ -17,6 +17,7 @@ namespace OTP
     {
         private string connectionString = "Data Source=key.db;Version=3;";
         private bool isCapturing = false; // 添加标识截图状态的成员变量
+        private bool isLocalfile = false;
 
         public Form3()
         {
@@ -64,7 +65,31 @@ namespace OTP
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
+        //这里摆烂，自用的怎么会犯操作上的错误，主要是遇到bug不想修，先晾着
+        //private void deactivateButton(int btn)
+        //{
+        //    if (btn == 3)
+        //    {
+        //        button1.Enabled = false;
+        //        button4.Enabled = false;
+        //        button5.Enabled = false;
+        //        button6.Enabled = false;
+        //    }
+        //}
+        //private void activeButton()
+        //{
+        //    for (int i = 1; i <= 6; i++)
+        //    {
+        //        string buttonName = "button" + i;
+        //        Control[] controls = this.Controls.Find(buttonName, true);
 
+        //        if (controls.Length > 0 && controls[0] is Button)
+        //        {
+        //            Button button = (Button)controls[0];
+        //            button.Enabled = true;
+        //        }
+        //    }
+        //}
         private void button3_Click(object sender, EventArgs e)
         {
             if (isCapturing)
@@ -83,6 +108,7 @@ namespace OTP
 
         private void StartCapturing()
         {
+            //deactivateButton(3);
             isCapturing = true; // 设置截图状态为正在截图
             ScreenCapturer.StartCapture((Bitmap bitmap) => {
                 // 进行二维码扫描
@@ -92,6 +118,7 @@ namespace OTP
 
         private void StopCapturing()
         {
+            //activeButton();
             isCapturing = false; // 设置截图状态为未截图
             ScreenCapturer.StopCapture(); // 停止截图
         }
@@ -113,8 +140,15 @@ namespace OTP
                 // 判断是否符合期望的格式
                 if (decodedText.StartsWith("otpauth://totp/") && decodedText.Contains("?secret="))
                 {
-                    StopCapturing(); 
-                    this.Invoke((MethodInvoker)(() => label5.Text = "Stopped"));
+                    if (!isLocalfile)
+                    {
+                        StopCapturing();
+                        this.Invoke((MethodInvoker)(() => label5.Text = "Stopped"));
+                    }
+                    else
+                    {
+                        isLocalfile = false;
+                    }
                     string[] parts = decodedText.Split(new char[] { '/', '=', '&','?' });
                     if (parts.Length >= 6)
                     {
@@ -134,6 +168,33 @@ namespace OTP
                 else
                 {
                     this.Invoke((MethodInvoker)(() => label4.Text = "QR code format not recognized."));
+                }
+            }
+            else
+            {
+                if (isLocalfile)
+                {
+                    label3.Text = "None";
+                    label4.Text = "QR code not detected.";
+                }
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            isLocalfile = true;
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+
+                    using (Bitmap image = new Bitmap(filePath))
+                    {
+                        ScanQRCode(image);
+                    }
+                    
                 }
             }
         }
