@@ -40,6 +40,10 @@ namespace OTP
             public int Id { get; set; }
             public string Title { get; set; }
             public string SecretKey { get; set; }
+            public override string ToString()
+            {
+                return Title; // 返回 Title 属性的值作为显示文本
+            }
         }
 
 
