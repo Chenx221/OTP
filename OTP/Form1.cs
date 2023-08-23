@@ -156,8 +156,13 @@ namespace OTP
                         button1.Enabled = true;
                         runonce++;
                     }
+                    //timer.Stop();
                     secretKey = Base32Encoding.ToBytes(selectedTitleInfo.SecretKey);
                     totp = new Totp(secretKey);
+                    if (timer.Enabled)
+                    {
+                        GenerateAndDisplayTotp();
+                    }
                     //string totpCode = totp.ComputeTotp();
                     //label1.Text = totpCode;
                 }
@@ -207,6 +212,8 @@ namespace OTP
                 label1.Text = "TOTP Code";
                 button1.Enabled = false;
                 button2.Enabled = false;
+                circularProgressBar1.Text = "time";
+                circularProgressBar1.Value = 30;
             }
             else
             {
