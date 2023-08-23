@@ -225,5 +225,15 @@ namespace OTP
             }
         }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
+            LoadTitlesToListBox();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Form4 form4 = new Form4();
+            form4.Show();
+        }
     }
 }

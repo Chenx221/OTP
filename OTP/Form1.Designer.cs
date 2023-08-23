@@ -41,10 +41,12 @@
             // 
             // listBox1
             // 
+            this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 20;
             this.listBox1.Location = new System.Drawing.Point(42, 38);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(473, 368);
+            this.listBox1.Size = new System.Drawing.Size(473, 364);
             this.listBox1.TabIndex = 0;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
@@ -63,9 +65,9 @@
             // button1
             // 
             this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(556, 294);
+            this.button1.Location = new System.Drawing.Point(549, 294);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(85, 23);
+            this.button1.Size = new System.Drawing.Size(92, 23);
             this.button1.TabIndex = 3;
             this.button1.Text = "Generate";
             this.button1.UseVisualStyleBackColor = true;
@@ -76,7 +78,7 @@
             this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(647, 294);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(85, 111);
+            this.button2.Size = new System.Drawing.Size(99, 111);
             this.button2.TabIndex = 3;
             this.button2.Text = "Copy";
             this.button2.UseVisualStyleBackColor = true;
@@ -130,9 +132,9 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(556, 323);
+            this.button3.Location = new System.Drawing.Point(549, 323);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(85, 23);
+            this.button3.Size = new System.Drawing.Size(92, 23);
             this.button3.TabIndex = 7;
             this.button3.Text = "Manage";
             this.button3.UseVisualStyleBackColor = true;
@@ -140,21 +142,23 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(556, 352);
+            this.button4.Location = new System.Drawing.Point(549, 352);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(85, 23);
+            this.button4.Size = new System.Drawing.Size(92, 23);
             this.button4.TabIndex = 8;
             this.button4.Text = "Refresh";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(556, 382);
+            this.button5.Location = new System.Drawing.Point(549, 382);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(85, 23);
+            this.button5.Size = new System.Drawing.Size(92, 23);
             this.button5.TabIndex = 9;
-            this.button5.Text = "About";
+            this.button5.Text = "Troubleshooting";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // Form1
             // 
@@ -170,8 +174,9 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.circularProgressBar1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
-            this.Text = "Main Window";
+            this.Text = "TOTP";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.VisibleChanged += new System.EventHandler(this.Form1_VisibleChanged);
