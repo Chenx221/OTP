@@ -46,6 +46,7 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(473, 368);
             this.listBox1.TabIndex = 0;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -61,6 +62,7 @@
             // 
             // button1
             // 
+            this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(556, 294);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(85, 23);
@@ -171,6 +173,8 @@
             this.Name = "Form1";
             this.Text = "Main Window";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.VisibleChanged += new System.EventHandler(this.Form1_VisibleChanged);
             this.ResumeLayout(false);
             this.PerformLayout();
 
