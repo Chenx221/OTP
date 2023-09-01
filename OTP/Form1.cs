@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using OtpNet;
 using System.IO;
 using System.Data.SQLite;
 using System.Reflection;
-using ZXing.QrCode.Internal;
 
 namespace OTP
 {
@@ -22,7 +14,7 @@ namespace OTP
         private Timer timer;
         private string connectionString = "Data Source=key.db;Version=3;";
         private string embeddedDatabaseResource = "OTP.empty_key.db";
-        private int runonce=0;
+        private int runonce = 0;
 
         public Form1()
         {
@@ -89,7 +81,7 @@ namespace OTP
                 ExtractEmbeddedDatabase();
             }
 
-            
+
         }
         private void ExtractEmbeddedDatabase()
         {

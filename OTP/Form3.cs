@@ -1,19 +1,11 @@
 ﻿using ScreenCapturerNS;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SQLite;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
 using ZXing;
-using AForge.Video;
-using AForge.Video.DirectShow;
-using System.Drawing.Imaging;
+//using AForge.Video;
+//using AForge.Video.DirectShow;
 
 namespace OTP
 {
@@ -125,7 +117,8 @@ namespace OTP
         {
             //deactivateButton(3);
             isCapturing = true; // 设置截图状态为正在截图
-            ScreenCapturer.StartCapture((Bitmap bitmap) => {
+            ScreenCapturer.StartCapture((Bitmap bitmap) =>
+            {
                 // 进行二维码扫描
                 ScanQRCode(bitmap);
             });
@@ -163,7 +156,7 @@ namespace OTP
                     {
                         isLocalfile = false;
                     }
-                    string[] parts = decodedText.Split(new char[] { '/', '=', '&','?' });
+                    string[] parts = decodedText.Split(new char[] { '/', '=', '&', '?' });
                     if (parts.Length >= 6)
                     {
                         string title = parts[3]; // 获取 title 部分
@@ -191,7 +184,8 @@ namespace OTP
                 {
                     label3.Text = "None";
                     label4.Text = "QR code not detected.";
-                }else if (isScanningPaused)
+                }
+                else if (isScanningPaused)
                 {
                     this.Invoke((MethodInvoker)(() => label3.Text = "None"));
                     this.Invoke((MethodInvoker)(() => label4.Text = "QR code not detected."));
@@ -213,7 +207,7 @@ namespace OTP
                     {
                         ScanQRCode(image);
                     }
-                    
+
                 }
             }
         }
@@ -225,7 +219,8 @@ namespace OTP
             if (isCameraRunning)
             {
                 StopCamera(); // 停止摄像头
-            }else
+            }
+            else
             {
                 StartCamera(); // 启动摄像头
             }
