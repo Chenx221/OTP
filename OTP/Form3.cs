@@ -7,7 +7,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Timers;
 using System.Windows.Forms;
 using ZXing;
 
@@ -20,11 +19,9 @@ namespace OTP
         private bool isLocalfile = false;
         private bool isScanningPaused = false;
         private bool isRecording = false;
-        //private Bitmap previousBitmap = null;
         private SynchronizationContext synchContext;
         private System.Windows.Forms.Timer timer;
 
-        // Constructed capture device.
         private CaptureDevice captureDevice;
 
         public Form3()
@@ -38,10 +35,8 @@ namespace OTP
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
-            // 检查是否有图像可用
             if (pictureBox1.Image != null && isRecording)
             {
-                // 调用 ScanQRCode 方法，将当前图像传递给它
                 ScanQRCode((Bitmap)pictureBox1.Image);
             }
         }
@@ -49,7 +44,7 @@ namespace OTP
 
         private async void Form3_FormClosing(object sender, FormClosingEventArgs e)
         {
-            StopCapturing(); // 关闭窗口时停止截图
+            StopCapturing();
             if (isRecording)
             {
                 await this.captureDevice.StopAsync();
@@ -119,7 +114,6 @@ namespace OTP
             isCapturing = true; // 设置截图状态为正在截图
             ScreenCapturer.StartCapture((Bitmap bitmap) =>
             {
-                // 进行二维码扫描
                 ScanQRCode(bitmap);
             });
         }
@@ -235,7 +229,7 @@ namespace OTP
             var descriptor0 = descriptors.ElementAtOrDefault(0);
 
             if (descriptor0 != null)
-            { 
+            {
                 var characteristics = descriptor0.Characteristics.
                     FirstOrDefault(c => c.PixelFormat != PixelFormats.Unknown);
                 if (characteristics != null)

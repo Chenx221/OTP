@@ -1,9 +1,9 @@
-﻿using System;
-using System.Windows.Forms;
-using OtpNet;
-using System.IO;
+﻿using OtpNet;
+using System;
 using System.Data.SQLite;
+using System.IO;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace OTP
 {

@@ -55,11 +55,9 @@
             // 
             // label1
             // 
-            label1.AutoSize = true;
             label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             label1.Location = new System.Drawing.Point(640, 68);
             label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            label1.MinimumSize = new System.Drawing.Size(230, 43);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(230, 43);
             label1.TabIndex = 1;
@@ -92,14 +90,12 @@
             // 
             // label2
             // 
-            label2.AutoSize = true;
             label2.BackColor = System.Drawing.Color.Transparent;
             label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            label2.Location = new System.Drawing.Point(681, 285);
+            label2.Location = new System.Drawing.Point(640, 285);
             label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            label2.MinimumSize = new System.Drawing.Size(144, 23);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(144, 23);
+            label2.Size = new System.Drawing.Size(230, 23);
             label2.TabIndex = 5;
             label2.Text = "Remaining Time";
             label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -147,12 +143,13 @@
             // 
             // label3
             // 
-            label3.AutoSize = true;
             label3.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            label3.Location = new System.Drawing.Point(702, 219);
+            label3.Location = new System.Drawing.Point(640, 219);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(0, 45);
+            label3.Size = new System.Drawing.Size(230, 45);
             label3.TabIndex = 11;
+            label3.Text = "1";
+            label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Form1
             // 
@@ -178,7 +175,6 @@
             Load += Form1_Load;
             VisibleChanged += Form1_VisibleChanged;
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
