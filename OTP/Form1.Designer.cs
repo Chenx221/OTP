@@ -38,6 +38,7 @@
             button4 = new System.Windows.Forms.Button();
             button5 = new System.Windows.Forms.Button();
             progressBar1 = new System.Windows.Forms.ProgressBar();
+            label3 = new System.Windows.Forms.Label();
             SuspendLayout();
             // 
             // listBox1
@@ -139,15 +140,26 @@
             // progressBar1
             // 
             progressBar1.Location = new System.Drawing.Point(640, 165);
+            progressBar1.Maximum = 30;
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new System.Drawing.Size(230, 51);
             progressBar1.TabIndex = 10;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            label3.Location = new System.Drawing.Point(702, 219);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(0, 45);
+            label3.TabIndex = 11;
             // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(904, 508);
+            Controls.Add(label3);
             Controls.Add(progressBar1);
             Controls.Add(button5);
             Controls.Add(button4);
@@ -180,6 +192,7 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Label label3;
     }
 }
 

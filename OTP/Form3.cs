@@ -1,7 +1,12 @@
-﻿using ScreenCapturerNS;
+﻿using FlashCap;
+using FlashCap.Utilities;
+using ScreenCapturerNS;
 using System;
 using System.Data.SQLite;
 using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using ZXing;
 //using AForge.Video;
@@ -14,16 +19,20 @@ namespace OTP
         private string connectionString = "Data Source=key.db;Version=3;";
         private bool isCapturing = false; // 添加标识截图状态的成员变量
         private bool isLocalfile = false;
-        private FilterInfoCollection videoDevices; // 声明用于存储摄像头设备信息的变量
-        private VideoCaptureDevice camera; // 声明用于摄像头捕获的变量
+        //private FilterInfoCollection videoDevices; // 声明用于存储摄像头设备信息的变量
+        //private VideoCaptureDevice camera; // 声明用于摄像头捕获的变量
         private bool isCameraRunning = false; // 用于标识摄像头的运行状态
         private bool isScanningPaused = false;
-        private Bitmap previousBitmap = null;
+        //private Bitmap previousBitmap = null;
+        private SynchronizationContext synchContext;
+
+        // Constructed capture device.
+        private CaptureDevice captureDevice;
 
         public Form3()
         {
             InitializeComponent();
-            videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            //videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
 
         }
 
@@ -72,31 +81,6 @@ namespace OTP
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
-        //这里摆烂，自用的怎么会犯操作上的错误，主要是遇到bug不想修，先晾着
-        //private void deactivateButton(int btn)
-        //{
-        //    if (btn == 3)
-        //    {
-        //        button1.Enabled = false;
-        //        button4.Enabled = false;
-        //        button5.Enabled = false;
-        //        button6.Enabled = false;
-        //    }
-        //}
-        //private void activeButton()
-        //{
-        //    for (int i = 1; i <= 6; i++)
-        //    {
-        //        string buttonName = "button" + i;
-        //        Control[] controls = this.Controls.Find(buttonName, true);
-
-        //        if (controls.Length > 0 && controls[0] is Button)
-        //        {
-        //            Button button = (Button)controls[0];
-        //            button.Enabled = true;
-        //        }
-        //    }
-        //}
         private void button3_Click(object sender, EventArgs e)
         {
             if (isCapturing)
@@ -134,7 +118,7 @@ namespace OTP
         private void ScanQRCode(Bitmap bitmap)
         {
             // 创建二维码读取器实例
-            BarcodeReader barcodeReader = new BarcodeReader();
+            var barcodeReader = new ZXing.Windows.Compatibility.BarcodeReader();
 
             // 尝试解码二维码
             Result result = barcodeReader.Decode(bitmap);
@@ -212,73 +196,146 @@ namespace OTP
             }
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private async void button5_Click(object sender, EventArgs e)
         {
-            isScanningPaused = false;
-            button7.Text = "Pause";
-            if (isCameraRunning)
+            this.synchContext = SynchronizationContext.Current;
+
+            ////////////////////////////////////////////////
+            // Initialize and start capture device
+
+            // Capture device enumeration:
+            var devices = new CaptureDevices();
+
+            var descriptors = devices.EnumerateDescriptors().
+                // You could filter by device type and characteristics.
+                //Where(d => d.DeviceType == DeviceTypes.DirectShow).  // Only DirectShow device.
+                Where(d => d.Characteristics.Length >= 1).             // One or more valid video characteristics.
+                ToArray();
+
+            // Use first device.
+            var descriptor0 = descriptors.ElementAtOrDefault(0);
+
+            if (descriptor0 != null)
             {
-                StopCamera(); // 停止摄像头
+#if false
+            // Request video characteristics strictly:
+            // Will raise exception when parameters are not accepted.
+            var characteristics = new VideoCharacteristics(
+                PixelFormats.JPEG, 1920, 1080, 60);
+#else
+                // Or, you could choice from device descriptor:
+                // Hint: Show up video characteristics into ComboBox and like.
+                var characteristics = descriptor0.Characteristics.
+                    FirstOrDefault(c => c.PixelFormat != PixelFormats.Unknown);
+#endif
+                if (characteristics != null)
+                {
+                    // Open capture device:
+                    this.captureDevice = await descriptor0.OpenAsync(
+                        characteristics,
+                        this.OnPixelBufferArrived);
+
+                    // Start capturing.
+                    await this.captureDevice.StartAsync();
+                }
             }
-            else
+
+        }
+        private void OnPixelBufferArrived(PixelBufferScope bufferScope)
+        {
+            ////////////////////////////////////////////////
+            // Pixel buffer has arrived.
+            // NOTE: Perhaps this thread context is NOT UI thread.
+#if false
+        // Get image data binary:
+        byte[] image = bufferScope.Buffer.ExtractImage();
+#else
+            // Or, refer image data binary directly.
+            // (Advanced manipulation, see README.)
+            ArraySegment<byte> image = bufferScope.Buffer.ReferImage();
+#endif
+            // Convert to Stream (using FlashCap.Utilities)
+            using (var stream = image.AsStream())
             {
-                StartCamera(); // 启动摄像头
+                // Decode image data to a bitmap:
+                var bitmap = Image.FromStream(stream);
+
+                // `bitmap` is copied, so we can release pixel buffer now.
+                bufferScope.ReleaseNow();
+
+                // Switch to UI thread.
+                // HACK: Here is using `SynchronizationContext.Post()` instead of `Control.Invoke()`.
+                // Because in sensitive states when the form is closing,
+                // `Control.Invoke()` can fail with exception.
+                this.synchContext.Post(_ =>
+                {
+                    // HACK: on .NET Core, will be leaked (or delayed GC?)
+                    //   So we could release manually before updates.
+                    var oldImage = this.BackgroundImage;
+                    if (oldImage != null)
+                    {
+                        //this.BackgroundImage = null;
+                        oldImage.Dispose();
+                    }
+
+                    // Update a bitmap.
+                    pictureBox1.Image = bitmap;
+                }, null);
             }
         }
-
         private void StartCamera()
         {
-            if (!isCameraRunning) // 添加条件检查摄像头是否已经在运行
-            {
-                if (videoDevices != null && videoDevices.Count > 0)
-                {
-                    if (camera == null)
-                    {
-                        camera = new VideoCaptureDevice(videoDevices[0].MonikerString);
-                    }
-                    camera.NewFrame += Camera_NewFrame; // 注册摄像头捕获图像的事件
-                    camera.Start(); // 启动摄像头
-                    isCameraRunning = true; // 设置摄像头运行状态为 true
-                }
-                else
-                {
-                    MessageBox.Show("No camera device found.");
-                }
-            }
+            //if (!isCameraRunning) // 添加条件检查摄像头是否已经在运行
+            //{
+            //    if (videoDevices != null && videoDevices.Count > 0)
+            //    {
+            //        if (camera == null)
+            //        {
+            //            camera = new VideoCaptureDevice(videoDevices[0].MonikerString);
+            //        }
+            //        camera.NewFrame += Camera_NewFrame; // 注册摄像头捕获图像的事件
+            //        camera.Start(); // 启动摄像头
+            //        isCameraRunning = true; // 设置摄像头运行状态为 true
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("No camera device found.");
+            //    }
+            //}
         }
 
         private void StopCamera()
         {
-            if (camera != null && camera.IsRunning)
-            {
-                camera.SignalToStop();
-                camera.WaitForStop();
-                camera.NewFrame -= Camera_NewFrame; // 取消注册摄像头捕获图像的事件
-                camera = null; // 将摄像头对象置为null，以便下次重新创建
-                isCameraRunning = false; // 设置摄像头运行状态为 false
-                isScanningPaused = false;
-                button7.Text = "Pause";
-            }
+            //if (camera != null && camera.IsRunning)
+            //{
+            //    camera.SignalToStop();
+            //    camera.WaitForStop();
+            //    camera.NewFrame -= Camera_NewFrame; // 取消注册摄像头捕获图像的事件
+            //    camera = null; // 将摄像头对象置为null，以便下次重新创建
+            //    isCameraRunning = false; // 设置摄像头运行状态为 false
+            //    isScanningPaused = false;
+            //    button7.Text = "Pause";
+            //}
         }
 
-        private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
-        {
-            Bitmap bitmap = (Bitmap)eventArgs.Frame.Clone();
-            if (!isScanningPaused)
-            {
-                if (previousBitmap != null)
-                {
-                    previousBitmap.Dispose();
-                }
-                pictureBox1.Image = bitmap;
-                previousBitmap = bitmap;
-            }
-            else
-            {
-                ScanQRCode(bitmap);
-                bitmap.Dispose();
-            }
-        }
+        //private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
+        //{
+        //    //Bitmap bitmap = (Bitmap)eventArgs.Frame.Clone();
+        //    //if (!isScanningPaused)
+        //    //{
+        //    //    if (previousBitmap != null)
+        //    //    {
+        //    //        previousBitmap.Dispose();
+        //    //    }
+        //    //    pictureBox1.Image = bitmap;
+        //    //    previousBitmap = bitmap;
+        //    //}
+        //    //else
+        //    //{
+        //    //    ScanQRCode(bitmap);
+        //    //    bitmap.Dispose();
+        //    //}
+        //}
 
         private void button7_Click(object sender, EventArgs e)
         {
@@ -311,6 +368,13 @@ namespace OTP
             {
                 MessageBox.Show("Clipboard content is not a valid OTP link.");
             }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            // Discard capture device.
+            this.captureDevice?.Dispose();
+            this.captureDevice = null;
         }
     }
 }

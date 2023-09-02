@@ -42,8 +42,8 @@ namespace OTP
         private void Timer_Tick(object sender, EventArgs e)
         {
             int remainingSeconds = totp.RemainingSeconds();
-            circularProgressBar1.Text = remainingSeconds.ToString();
-            circularProgressBar1.Value = remainingSeconds;
+            label3.Text = remainingSeconds.ToString();
+            progressBar1.Value = remainingSeconds;
             if (remainingSeconds == 30)
             {
                 GenerateAndDisplayTotp();
@@ -208,8 +208,8 @@ namespace OTP
                 label1.Text = "TOTP Code";
                 button1.Enabled = false;
                 button2.Enabled = false;
-                circularProgressBar1.Text = "time";
-                circularProgressBar1.Value = 30;
+                label3.Text = "time";
+                progressBar1.Value = 30;
             }
             else
             {

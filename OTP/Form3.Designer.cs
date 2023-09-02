@@ -44,6 +44,7 @@
             groupBox1 = new System.Windows.Forms.GroupBox();
             button7 = new System.Windows.Forms.Button();
             pictureBox1 = new System.Windows.Forms.PictureBox();
+            button8 = new System.Windows.Forms.Button();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -182,6 +183,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(button8);
             groupBox1.Controls.Add(button7);
             groupBox1.Controls.Add(pictureBox1);
             groupBox1.Controls.Add(label4);
@@ -220,6 +222,16 @@
             pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 14;
             pictureBox1.TabStop = false;
+            // 
+            // button8
+            // 
+            button8.Location = new System.Drawing.Point(427, 0);
+            button8.Name = "button8";
+            button8.Size = new System.Drawing.Size(101, 23);
+            button8.TabIndex = 15;
+            button8.Text = "Stop Camera";
+            button8.UseVisualStyleBackColor = true;
+            button8.Click += button8_Click;
             // 
             // Form3
             // 
@@ -272,5 +284,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
     }
 }
