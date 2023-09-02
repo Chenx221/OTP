@@ -42,9 +42,8 @@
             label4 = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
             groupBox1 = new System.Windows.Forms.GroupBox();
-            button7 = new System.Windows.Forms.Button();
-            pictureBox1 = new System.Windows.Forms.PictureBox();
             button8 = new System.Windows.Forms.Button();
+            pictureBox1 = new System.Windows.Forms.PictureBox();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -184,7 +183,6 @@
             // groupBox1
             // 
             groupBox1.Controls.Add(button8);
-            groupBox1.Controls.Add(button7);
             groupBox1.Controls.Add(pictureBox1);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label5);
@@ -198,20 +196,15 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Debug Info";
             // 
-            // button7
+            // button8
             // 
-            button7.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            button7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            button7.Location = new System.Drawing.Point(427, 187);
-            button7.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button7.MinimumSize = new System.Drawing.Size(88, 87);
-            button7.Name = "button7";
-            button7.Size = new System.Drawing.Size(88, 87);
-            button7.TabIndex = 15;
-            button7.Text = "Pause";
-            button7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            button7.UseVisualStyleBackColor = true;
-            button7.Click += button7_Click;
+            button8.Location = new System.Drawing.Point(427, 0);
+            button8.Name = "button8";
+            button8.Size = new System.Drawing.Size(101, 23);
+            button8.TabIndex = 15;
+            button8.Text = "Stop Camera";
+            button8.UseVisualStyleBackColor = true;
+            button8.Click += button8_Click;
             // 
             // pictureBox1
             // 
@@ -222,16 +215,6 @@
             pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 14;
             pictureBox1.TabStop = false;
-            // 
-            // button8
-            // 
-            button8.Location = new System.Drawing.Point(427, 0);
-            button8.Name = "button8";
-            button8.Size = new System.Drawing.Size(101, 23);
-            button8.TabIndex = 15;
-            button8.Text = "Stop Camera";
-            button8.UseVisualStyleBackColor = true;
-            button8.Click += button8_Click;
             // 
             // Form3
             // 
@@ -283,7 +266,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
     }
 }
