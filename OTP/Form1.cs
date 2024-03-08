@@ -57,7 +57,7 @@ namespace OTP
 
             // 在标签上显示新生成的密码
             // 使用Invoke确保在UI线程上更新UI元素
-            this.Invoke((MethodInvoker)(() => label1.Text = newTotpCode));
+            this.Invoke((System.Windows.Forms.MethodInvoker)(() => label1.Text = newTotpCode));
         }
 
 
