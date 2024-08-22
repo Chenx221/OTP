@@ -23,7 +23,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>none</DebugType>
+    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>OTP.Program</StartupObject>
@@ -38,7 +38,7 @@
     <SignAssembly>False</SignAssembly>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>none</DebugType>
+    <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="empty_key.db" />
@@ -59,25 +59,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FlashCap" Version="1.10.0" />
-    <PackageReference Include="GuerrillaNtp" Version="3.1.0" />
     <PackageReference Include="Otp.NET" Version="1.4.0" />
-    <PackageReference Include="ScreenCapturer" Version="3.0.1" />
-    <PackageReference Include="SharpDX" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
-    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.118.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118.0" />
     <PackageReference Include="System.Data.SQLite.EF6" Version="1.0.118.0" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
     <PackageReference Include="ZXing.Net" Version="0.16.9" />
     <PackageReference Include="ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.12" />
     <PackageReference Include="EntityFramework" Version="6.5.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">

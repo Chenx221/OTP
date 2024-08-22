@@ -8,8 +8,8 @@ namespace OTP
 {
     public partial class Form2 : Form
     {
-        private string connectionString = "Data Source=key.db;Version=3;";
-        private string backupPath = "key.db.bak"; // 备份数据库文件的路径
+        private const string connectionString = "Data Source=key.db;Version=3;";
+        private const string backupPath = "key.db.bak"; // 备份数据库文件的路径
         private string sourceFileHash = ""; // 原始数据库文件的哈希值
 
         public Form2()
@@ -65,16 +65,12 @@ namespace OTP
             }
         }
         // 计算文件的SHA-256哈希值
-        private string CalculateSHA256Hash(string filePath)
+        private static string CalculateSHA256Hash(string filePath)
         {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                using (FileStream stream = File.OpenRead(filePath))
-                {
-                    byte[] hashBytes = sha256.ComputeHash(stream);
-                    return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-                }
-            }
+            using SHA256 sha256 = SHA256.Create();
+            using FileStream stream = File.OpenRead(filePath);
+            byte[] hashBytes = sha256.ComputeHash(stream);
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
 
 
@@ -86,51 +82,42 @@ namespace OTP
         {
             dataGridView1.Rows.Clear(); // 清空现有数据
 
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
-            {
-                connection.Open();
+            using SQLiteConnection connection = new(connectionString);
+            connection.Open();
 
-                using (SQLiteCommand command = new SQLiteCommand("SELECT Id, Title FROM TotpData", connection))
-                {
-                    using (SQLiteDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            int id = reader.GetInt32(0);
-                            string title = reader.GetString(1);
-                            dataGridView1.Rows.Add(title);
-                            dataGridView1.Rows[dataGridView1.Rows.Count - 1].Tag = id; // 将 Id 存储在行的 Tag 属性中
-                        }
-                    }
-                }
+            using SQLiteCommand command = new("SELECT Id, Title FROM TotpData", connection);
+            using SQLiteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(0);
+                string title = reader.GetString(1);
+                dataGridView1.Rows.Add(title);
+                dataGridView1.Rows[^1].Tag = id; // 将 Id 存储在行的 Tag 属性中
             }
         }
 
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
-            using (Form3 form3 = new Form3())
-            {
-                DialogResult result = form3.ShowDialog();
+            using Form3 form3 = new();
+            DialogResult result = form3.ShowDialog();
 
-                if (result == DialogResult.OK)
-                {
-                    // 在 Form3 中添加数据完成后，刷新数据
-                    LoadData();
-                }
+            if (result == DialogResult.OK)
+            {
+                // 在 Form3 中添加数据完成后，刷新数据
+                LoadData();
             }
         }
 
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Form1 form1 = Application.OpenForms["Form1"] as Form1;
-            if (form1 != null)
+            if (Application.OpenForms["Form1"] is Form1 form1)
             {
                 form1.Show();
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             try
             {
@@ -153,20 +140,16 @@ namespace OTP
             }
         }
 
-        private void DeleteRecordFromDatabase(int recordId)
+        private static void DeleteRecordFromDatabase(int recordId)
         {
             try
             {
-                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
-                {
-                    connection.Open();
+                using SQLiteConnection connection = new(connectionString);
+                connection.Open();
 
-                    using (SQLiteCommand command = new SQLiteCommand("DELETE FROM TotpData WHERE ID = @ID", connection))
-                    {
-                        command.Parameters.AddWithValue("@ID", recordId);
-                        command.ExecuteNonQuery();
-                    }
-                }
+                using SQLiteCommand command = new("DELETE FROM TotpData WHERE ID = @ID", connection);
+                command.Parameters.AddWithValue("@ID", recordId);
+                command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
@@ -174,7 +157,7 @@ namespace OTP
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             // 删除备份文件
             if (File.Exists(backupPath))
@@ -186,7 +169,7 @@ namespace OTP
             this.Close();
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             try
             {

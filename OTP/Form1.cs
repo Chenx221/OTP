@@ -12,8 +12,8 @@ namespace OTP
         private byte[] secretKey;
         private Totp totp;
         private Timer timer;
-        private string connectionString = "Data Source=key.db;Version=3;";
-        private string embeddedDatabaseResource = "OTP.empty_key.db";
+        private const string connectionString = "Data Source=key.db;Version=3;";
+        private const string embeddedDatabaseResource = "OTP.empty_key.db";
         private int runonce = 0;
 
         public Form1()
@@ -23,8 +23,10 @@ namespace OTP
             //secretKey = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP"); // 示例的 base32 编码
             //totp = new Totp(secretKey);
 
-            timer = new Timer();
-            timer.Interval = 1000; // 设置计时器间隔为 1 秒
+            timer = new Timer
+            {
+                Interval = 1000 // 设置计时器间隔为 1 秒
+            };
             timer.Tick += Timer_Tick;
         }
         public class TitleInfo
@@ -54,14 +56,16 @@ namespace OTP
         {
             // 生成新的 TOTP 密码
             string newTotpCode = totp.ComputeTotp();
+            string newNextTotpCode = totp.ComputeTotp(DateTime.UtcNow.AddSeconds(30));
 
             // 在标签上显示新生成的密码
             // 使用Invoke确保在UI线程上更新UI元素
             this.Invoke((System.Windows.Forms.MethodInvoker)(() => label1.Text = newTotpCode));
+            this.Invoke((System.Windows.Forms.MethodInvoker)(() => label5.Text = newNextTotpCode));
         }
 
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             button1.Enabled = false; // 禁用生成按钮
             button2.Enabled = true; // 启用复制按钮
@@ -83,18 +87,14 @@ namespace OTP
 
 
         }
-        private void ExtractEmbeddedDatabase()
+        private static void ExtractEmbeddedDatabase()
         {
             // 从嵌入的资源中复制数据库文件到同目录下
             try
             {
-                using (Stream resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedDatabaseResource))
-                {
-                    using (FileStream fileStream = new FileStream("key.db", FileMode.Create))
-                    {
-                        resourceStream.CopyTo(fileStream);
-                    }
-                }
+                using Stream resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedDatabaseResource);
+                using FileStream fileStream = new("key.db", FileMode.Create);
+                resourceStream.CopyTo(fileStream);
             }
             catch (Exception ex)
             {
@@ -106,32 +106,26 @@ namespace OTP
         {
             try
             {
-                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                using SQLiteConnection connection = new(connectionString);
+                connection.Open();
+
+                using SQLiteCommand command = new("SELECT Id, Title, SecretKey FROM TotpData", connection);
+                using SQLiteDataReader reader = command.ExecuteReader();
+                listBox1.Items.Clear(); // 清空现有数据
+                while (reader.Read())
                 {
-                    connection.Open();
+                    int id = reader.GetInt32(0);
+                    string title = reader.GetString(1);
+                    string secretKey = reader.GetString(2);
 
-                    using (SQLiteCommand command = new SQLiteCommand("SELECT Id, Title, SecretKey FROM TotpData", connection))
+                    TitleInfo titleInfo = new()
                     {
-                        using (SQLiteDataReader reader = command.ExecuteReader())
-                        {
-                            listBox1.Items.Clear(); // 清空现有数据
-                            while (reader.Read())
-                            {
-                                int id = reader.GetInt32(0);
-                                string title = reader.GetString(1);
-                                string secretKey = reader.GetString(2);
+                        Id = id,
+                        Title = title,
+                        SecretKey = secretKey
+                    };
 
-                                TitleInfo titleInfo = new TitleInfo
-                                {
-                                    Id = id,
-                                    Title = title,
-                                    SecretKey = secretKey
-                                };
-
-                                listBox1.Items.Add(titleInfo);
-                            }
-                        }
-                    }
+                    listBox1.Items.Add(titleInfo);
                 }
             }
             catch (Exception ex)
@@ -140,12 +134,11 @@ namespace OTP
             }
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex >= 0) // Ensure an item is selected
             {
-                TitleInfo selectedTitleInfo = listBox1.SelectedItem as TitleInfo;
-                if (selectedTitleInfo != null)
+                if (listBox1.SelectedItem is TitleInfo selectedTitleInfo)
                 {
                     if (runonce == 0)
                     {
@@ -170,15 +163,15 @@ namespace OTP
         }
 
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(label1.Text);
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3_Click(object sender, EventArgs e)
         {
             // 创建 Form2 实例
-            Form2 form2 = new Form2();
+            Form2 form2 = new();
 
             // 显示新创建的 Form2 实例
             form2.Show();
@@ -206,6 +199,7 @@ namespace OTP
                 LoadTitlesToListBox();
                 runonce = 0;
                 label1.Text = "TOTP Code";
+                label1.Text = "Next Code";
                 button1.Enabled = false;
                 button2.Enabled = false;
                 label3.Text = "time";
@@ -217,15 +211,10 @@ namespace OTP
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button4_Click(object sender, EventArgs e)
         {
             LoadTitlesToListBox();
         }
 
-        private void button5_Click(object sender, EventArgs e)
-        {
-            Form4 form4 = new Form4();
-            form4.Show();
-        }
     }
 }
