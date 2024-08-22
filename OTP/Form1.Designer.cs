@@ -64,6 +64,7 @@
             label1.TabIndex = 1;
             label1.Text = "TOTP Code";
             label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label1.Click += Label1_Click;
             // 
             // button1
             // 
@@ -160,6 +161,7 @@
             label5.Size = new System.Drawing.Size(92, 20);
             label5.TabIndex = 13;
             label5.Text = "Next Code";
+            label5.Click += Label5_Click;
             // 
             // Form1
             // 

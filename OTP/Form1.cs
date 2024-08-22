@@ -216,5 +216,14 @@ namespace OTP
             LoadTitlesToListBox();
         }
 
+        private void Label1_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(label1.Text);
+        }
+
+        private void Label5_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(label5.Text);
+        }
     }
 }
